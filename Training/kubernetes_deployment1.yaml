@@ -11,6 +11,6 @@ spec:
     spec:
       containers:
       - name: hello-node
-        image: icrosby/hello-node:v1
+        image: mvdmeij/k8sdemo:1
         ports:
         - containerPort: 8080
