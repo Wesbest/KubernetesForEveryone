@@ -5,7 +5,7 @@ In this workshop we will create your own namespace, deployment and service. We w
 
 &nbsp;
 ###  Login to your environment
-Goto this link: https://cloud.google.com/shell/
+Go to this link: https://cloud.google.com/shell/
 
 Launch the cloud shell. Use your Devoteam account to login. When the shell appear copy below, paste it there and hit enter.
 ```bash
