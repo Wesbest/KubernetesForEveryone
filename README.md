@@ -48,7 +48,7 @@ kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8sdemo
