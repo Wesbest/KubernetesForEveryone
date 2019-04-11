@@ -48,7 +48,7 @@ kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: k8sdemo
@@ -63,7 +63,7 @@ spec:
       - name: k8sdemo
         image: mvdmeij/k8sdemo:1
         ports:
-        - containerPort: 8080
+        - containerPort: 80
 ```
 
 To make sure if the deployment went correctly we are going to check the status
@@ -126,10 +126,10 @@ metadata:
   name: k8sdemo
 spec:
   type: LoadBalancer
-  ports:
-  - port: 8080
+  ports:  
+  - port: 80
     protocol: TCP
-    targetPort: 8080
+    targetPort: http
   selector:
     app: k8sdemo
 ```

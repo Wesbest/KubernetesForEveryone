@@ -4,9 +4,9 @@ metadata:
   name: k8sdemo
 spec:
   type: LoadBalancer
-  ports:
-  - port: 8686
+  ports:  
+  - port: 80
     protocol: TCP
-    targetPort: 8686
+    targetPort: http
   selector:
     app: k8sdemo
