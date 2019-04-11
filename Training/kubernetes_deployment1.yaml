@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8sdemo
+  name: helloworld
   labels:
-    app: k8sdemo
+    app: helloworld
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: k8sdemo
+      app: helloworld
   template:
     metadata:
       labels:
-        app: k8sdemo
+        app: helloworld
     spec:
       containers:
-      - name: k8sdemo
+      - name: helloworld
         image: mvdmeij/k8sdemo:1
         ports:
         - containerPort: 80
