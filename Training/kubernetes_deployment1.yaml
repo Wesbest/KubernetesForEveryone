@@ -2,8 +2,13 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: k8sdemo
+  labels:
+    app: k8sdemo
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: k8sdemo
   template:
     metadata:
       labels:
