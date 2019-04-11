@@ -13,4 +13,4 @@ spec:
       - name: k8sdemo
         image: mvdmeij/k8sdemo:1
         ports:
-        - containerPort: 8080
+        - containerPort: 80
