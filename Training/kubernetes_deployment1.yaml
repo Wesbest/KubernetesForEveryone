@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld
+  name: kubern8sdemo
   labels:
-    app: helloworld
+    app: kubern8sdemo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: helloworld
+      app: kubern8sdemo
   template:
     metadata:
       labels:
-        app: helloworld
+        app: kubern8sdemo
     spec:
       containers:
-      - name: helloworld
+      - name: kubern8sdemo
         image: mvdmeij/k8sdemo:1
         ports:
         - containerPort: 80
