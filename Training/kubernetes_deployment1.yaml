@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: hello-node
+  name: k8sdemo
 spec:
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-node
+        app: k8sdemo
     spec:
       containers:
-      - name: hello-node
+      - name: k8sdemo
         image: mvdmeij/k8sdemo:1
         ports:
         - containerPort: 8080
