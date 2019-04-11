@@ -48,19 +48,19 @@ kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
-apiVersion: extensions/v1beta1
+apiVersion: v1
 kind: Deployment
 metadata:
-  name: hello-node
+  name: k8sdemo
 spec:
   replicas: 3
   template:
     metadata:
       labels:
-        app: hello-node
+        app: k8sdemo
     spec:
       containers:
-      - name: hello-node
+      - name: k8sdemo
         image: mvdmeij/k8sdemo:1
         ports:
         - containerPort: 8080
@@ -108,4 +108,39 @@ hello-node-7ccb79b494-ht8vz   1/1       Running   0          13m
 hello-node-7ccb79b494-shv8q   1/1       Running   0          49s
 hello-node-7ccb79b494-z7sz9   1/1       Running   0          13m
 ```
-In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of pods should be 3. Kubernetes have automatically create a new pod. Above you can see a new pod has been created 49s ago while the other 2 were created 13m ago. 
+In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 49s ago while the other 2 were created 13m ago. 
+
+&nbsp;
+### Create a service
+We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Let's create a service now:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service1.yaml
+```
+To get a clear view of what we have created I have included the yaml file of the service. 
+
+```bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8sdemo
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: k8sdemo
+```
+Let's check the service.
+
+```bash
+kubectl get service
+```
+
+```bash
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
+hello-node   LoadBalancer   10.7.255.119   35.242.185.86   8080:30875/TCP   1m
+```
+Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
