@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: kubern8sservice
   labels:
-    app: kubern8s
+    app: kubern8sdemo
 spec:
   ports:  
   - port: 80
     targetPort: 80
   selector:
-    app: kubern8s
+    app: kubern8sdemo
   type: LoadBalancer
