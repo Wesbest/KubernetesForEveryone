@@ -85,15 +85,15 @@ kubectl get pods
 ```
 
 ```bash
-NAME                          READY     STATUS    RESTARTS   AGE
-hello-node-7ccb79b494-95qmc   1/1       Running   0          12s
-hello-node-7ccb79b494-ht8vz   1/1       Running   0          12s
-hello-node-7ccb79b494-z7sz9   1/1       Running   0          12s
+NAME                       READY     STATUS    RESTARTS   AGE
+k8sdemo-5dfb5cfc8d-87ccj   1/1       Running   0          46m
+k8sdemo-5dfb5cfc8d-gsx7h   1/1       Running   0          46m
+k8sdemo-5dfb5cfc8d-kk9k7   1/1       Running   0          46m
 ```
 As you can see there are three pods created each running with an own name. What would happen if we would delete one pod? Change the name to one of your pods
 
 ```bash
-kubectl delete pod <hello-node-7ccb79b494-95qmc>
+kubectl delete pod k8sdemo-5dfb5cfc8d-87ccj
 ```
 
 Okay we have now deleted the pod. Let's take a look at the status of the pods
@@ -104,9 +104,9 @@ kubectl get pods
 
 ```bash
 NAME                          READY     STATUS    RESTARTS   AGE
-hello-node-7ccb79b494-ht8vz   1/1       Running   0          13m
-hello-node-7ccb79b494-shv8q   1/1       Running   0          49s
-hello-node-7ccb79b494-z7sz9   1/1       Running   0          13m
+k8sdemo-5dfb5cfc8d-gsx7h   1/1       Running   0          47m
+k8sdemo-5dfb5cfc8d-kk9k7   1/1       Running   0          47m
+k8sdemo-5dfb5cfc8d-p9sh6   1/1       Running   0          14s
 ```
 In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 49s ago while the other 2 were created 13m ago. 
 
@@ -141,6 +141,6 @@ kubectl get service
 
 ```bash
 NAME         TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
-hello-node   LoadBalancer   10.7.255.119   35.242.185.86   8080:30875/TCP   1m
+k8sdemo   LoadBalancer   10.7.246.48   35.246.69.86   80:31261/TCP   47m
 ```
 Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
