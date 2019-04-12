@@ -151,3 +151,10 @@ NAME      TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)        AGE
 k8sdemo   LoadBalancer   10.7.246.48   35.246.69.86   80:31261/TCP   47m
 ```
 Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
+
+&nbsp;
+
+### Create a namespace
+Updating pods to newer version
+
+Also needs to be worked out
