@@ -111,6 +111,13 @@ k8sdemo-5dfb5cfc8d-p9sh6   1/1       Running   0          14s
 In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 49s ago while the other 2 were created 13m ago. 
 
 &nbsp;
+
+&nbsp;
+
+Change replicaset. Needs to be worked out!!!!!!!
+
+&nbsp;
+
 ### Create a service
 We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Let's create a service now:
 
