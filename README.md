@@ -154,7 +154,7 @@ Something similar should appear. The loadbalancer is now created and has got an 
 
 &nbsp;
 
-### Create a namespace
+### Update Pods
 Updating pods to newer version
 
 Also needs to be worked out
