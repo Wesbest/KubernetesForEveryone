@@ -29,7 +29,7 @@ kube-public   Active    1d
 You probably see something similiar above. It's now time to create your own namespace. Use the command below and change the name in the example to your own name.
 
 ```bash
-kubectl create namespace <wesley-rouw>
+kubectl create namespace wesley-rouw
 ```
 Most commands are easy to use in Kubernetes, switching between namespaces is quite difficult. Copy the command and you will be in your namespace. The command after that should confirm you are in the right namespace.
 
@@ -48,20 +48,25 @@ kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: k8sdemo
+  name: kubern8sdemo
+  labels:
+    app: kubern8sdemo
 spec:
   replicas: 3
+  selector:
+    matchLabels:
+      app: kubern8sdemo
   template:
     metadata:
       labels:
-        app: k8sdemo
+        app: kubern8sdemo
     spec:
       containers:
-      - name: k8sdemo
-        image: mvdmeij/k8sdemo:1
+      - name: kubern8sdemo
+        image: mvdmeij/k8sdemo:v1
         ports:
         - containerPort: 80
 ```
@@ -74,8 +79,8 @@ kubectl get deployments
 You should see something similar like this. These are the amounts of pods you have created during this deployment. As you can see you have a desired amount of 3 pods and the current amount of pods are 3
 
 ```bash
-NAME         DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-hello-node   3         3         3            3           6s
+NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kubern8sdemo   3         3         3            3           43s
 ```
 &nbsp;
 ### Pods
@@ -85,15 +90,15 @@ kubectl get pods
 ```
 
 ```bash
-NAME                       READY     STATUS    RESTARTS   AGE
-k8sdemo-5dfb5cfc8d-87ccj   1/1       Running   0          46m
-k8sdemo-5dfb5cfc8d-gsx7h   1/1       Running   0          46m
-k8sdemo-5dfb5cfc8d-kk9k7   1/1       Running   0          46m
+NAME                           READY     STATUS    RESTARTS   AGE
+kubern8sdemo-68fcf74b6-55vjr   1/1       Running   0          1m
+kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          1m
+kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          1m
 ```
 As you can see there are three pods created each running with an own name. What would happen if we would delete one pod? Change the name to one of your pods
 
 ```bash
-kubectl delete pod k8sdemo-5dfb5cfc8d-87ccj
+kubectl delete pod kubern8sdemo-68fcf74b6-55vjr
 ```
 
 Okay we have now deleted the pod. Let's take a look at the status of the pods
@@ -103,18 +108,38 @@ kubectl get pods
 ```
 
 ```bash
-NAME                          READY     STATUS    RESTARTS   AGE
-k8sdemo-5dfb5cfc8d-gsx7h   1/1       Running   0          47m
-k8sdemo-5dfb5cfc8d-kk9k7   1/1       Running   0          47m
-k8sdemo-5dfb5cfc8d-p9sh6   1/1       Running   0          14s
+NAME                           READY     STATUS    RESTARTS   AGE
+kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          2m
+kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          2m
+kubern8sdemo-68fcf74b6-s4j2h   1/1       Running   0          24s
 ```
-In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 49s ago while the other 2 were created 13m ago. 
-
+In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 24s ago while the other 2 were created 2m ago. 
 &nbsp;
 
-&nbsp;
+So how do we reduce the amounts of pods then? We will have to scale the deployment. We are now scaling down the deployment to 2 pods. This will be a permanent change, unless we late specify a different amount of pods. 
 
-Change replicaset. Needs to be worked out!!!!!!!
+```bash
+kubectl scale deployments kubern8sdemo --replicas=2  
+```
+Now let's check the amount of pods 
+
+```bash
+kubectl get pods
+```
+```bash
+NAME                           READY     STATUS    RESTARTS   AGE
+kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          7m
+kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          7m
+```
+As you can see the amount of pods has been reduced. Let's check the deployment to see the desired amount of pods
+```bash
+kubectl get deployments
+```
+```bash
+NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kubern8sdemo   2         2         2            2           10m
+```
+The desired amount is now 2. 
 
 &nbsp;
 
@@ -130,15 +155,16 @@ To get a clear view of what we have created I have included the yaml file of the
 apiVersion: v1
 kind: Service
 metadata:
-  name: k8sdemo
+  name: kubern8sservice
+  labels:
+    app: kubern8sdemo
 spec:
-  type: LoadBalancer
   ports:  
   - port: 80
-    protocol: TCP
-    targetPort: http
+    targetPort: 80
   selector:
-    app: k8sdemo
+    app: kubern8sdemo
+  type: LoadBalancer
 ```
 Let's check the service.
 
@@ -147,14 +173,46 @@ kubectl get service
 ```
 
 ```bash
-NAME      TYPE           CLUSTER-IP    EXTERNAL-IP    PORT(S)        AGE
-k8sdemo   LoadBalancer   10.7.246.48   35.246.69.86   80:31261/TCP   47m
+NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
+kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   47s
 ```
 Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
+&nbsp;
+
+We have connected the service to the pods with the labels and selectors. Let's check our browser. Open a new tab and copy the external IP. An webapplication should appear, hit the autorefresh button. We will need that later. 
 
 &nbsp;
 
 ### Update Pods
-Updating pods to newer version
 
-Also needs to be worked out
+Don't you think our application is outdated? I've heard the image got some updates, let's check it out. Remember the deployment?
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubern8sdemo
+  labels:
+    app: kubern8sdemo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kubern8sdemo
+  template:
+    metadata:
+      labels:
+        app: kubern8sdemo
+    spec:
+      containers:
+      - name: kubern8sdemo
+        image: mvdmeij/k8sdemo:v1
+        ports:
+        - containerPort: 80
+```
+
+As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. 
+
+```bash
+kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
+```
