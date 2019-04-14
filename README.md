@@ -211,8 +211,41 @@ spec:
         - containerPort: 80
 ```
 
-As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. 
+As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. When you do so, don't forget to check your browser. 
 
 ```bash
 kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
 ```
+I think version 5 is a little bit too overwhelming, let's switch to an older version. Let's also check right after we update what happens to the pods. 
+
+```bash
+kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
+```
+```bash
+kubectl get pods -w
+```
+the -w means that we are watching for changing. when you have executed that command you should see something similar like this:
+```bash
+NAME                           READY     STATUS              RESTARTS   AGE
+kubern8sdemo-7b4db456b-j59sd   1/1       Running             0          2m
+kubern8sdemo-7b4db456b-npk75   1/1       Running             0          2m
+kubern8sdemo-84ff7fd64-w4ksc   0/1       ContainerCreating   0          2s
+kubern8sdemo-84ff7fd64-w4ksc   1/1       Running   0         3s
+kubern8sdemo-7b4db456b-j59sd   1/1       Terminating   0         2m
+kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending   0         0s
+kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending   0         0s
+kubern8sdemo-84ff7fd64-m4rzh   0/1       ContainerCreating   0         0s
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
+kubern8sdemo-84ff7fd64-m4rzh   1/1       Running   0         4s
+kubern8sdemo-7b4db456b-npk75   1/1       Terminating   0         2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
+```
+Kubernetes is creating a new container and then terminates one and does this one more time since our desired amount is 2 containers. 
+
+&nbsp;
+### The End
+Well that's about it. You have learnt how to set up your own namespace. In this namespace you have set up a pod with 3 containers. Later we have scaled this amount down to 2. After that you have set up your own loadbalancer. Kubernetes automatically detected to which pod it needs to be connected. At last we have updated the version of the images the containers were running. Well done you did it! Don't hesitate to ask any questions.
