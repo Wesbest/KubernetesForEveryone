@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: kubern8sdemo
-        image: mvdmeij/k8sdemo:1
+        image: mvdmeij/k8sdemo:v1
         ports:
         - containerPort: 80
