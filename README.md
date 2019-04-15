@@ -219,7 +219,7 @@ kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
 I think version 5 is a little bit too overwhelming, let's switch to an older version. Let's also check right after we update what happens to the pods. 
 
 ```bash
-kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
+kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v3
 ```
 ```bash
 kubectl get pods -w
