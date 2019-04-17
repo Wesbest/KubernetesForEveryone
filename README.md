@@ -36,11 +36,22 @@ kubectl create namespace wesley-rouw
 ```
 Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. The command after that should confirm you are in the right namespace.
 
+Linux or OSX can execute the following command:
 ```bash
 kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
 # Validate it
 kubectl config view | grep namespace:
 ```
+Windows users can execute the folllowing command: 
+
+```bash
+kubectl config current-context
+Save the output and past it between the <> in the next command
+kubectl config set-context <place here the output of previous command>  --namespace=wesley-rouw
+# Validate it
+SDK>kubectl config view | findstr namespace:
+```
+
 
 &nbsp;
 ### Create a deployment
@@ -147,10 +158,11 @@ The desired amount is now 2.
 &nbsp;
 
 ### Create a service
-We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create a service:
+We have our application ready, let's expose it in it's namespace. For that we need to create a NodePort. This NodePort will be linked to the deployment with the use of the selectors and labels. Create a service:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service1.yaml
+kubectl apply -f 
+https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/service.yml
 ```
 To get a clear view of what we have created I have included the yaml file of the service. 
 
@@ -164,10 +176,9 @@ metadata:
 spec:
   ports:  
   - port: 80
-    targetPort: 80
   selector:
     app: kubern8sdemo
-  type: LoadBalancer
+  type: NodePort
 ```
 To check the status of the service, use the command below.
 
@@ -177,14 +188,23 @@ kubectl get service
 
 ```bash
 NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
-kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   47s
+kubern8sservice   NodePort       10.51.240.199   -               80:32015/TCP   47s
 ```
-Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
+Something similar should appear. The NodePort is now created and has got an random portnumber. 
 &nbsp;
 
-We have connected the service to the pods with the labels and selectors. When we will check our browser we will see the application. Open a new tab and copy the external IP. A webapplication should appear. Hit the autorefresh button. We will need that later. 
+We have connected the service to the pods with the labels and selectors. When we will check our browser we will see the application. For this we will need to create port-forward to your local system.
 
 &nbsp;
+
+```
+kubectl port-foward  svc/kubern8sservice 80:80
+```
+
+You will notice that your shell or command prompt doesn't return. This is because there is now an active portforward to your local system.
+Open your browser and try to browse to http://localhost and a webapplication should appear. Hit the autorefresh button. We will need that later.
+
+We will need to keep the port-forward session open so we need to open a new command prompt or shell to continue the following steps.
 
 ### Update Pods
 
