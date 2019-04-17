@@ -26,12 +26,15 @@ kube-system   Active    1d
 kube-public   Active    1d
 ```
 
-You probably see something similiar above. It's now time to create your own namespace. Use the command below and change the name in the example to your own name.
+You probably see something similiar above. Those are the default namespaces that are always there. If you will not specify a namespace, all your deployments and changes will be done on the default namespace. 
+&nbsp;
+
+It's now time to create your own namespace. Use the command below and change the name in the example to your own name.
 
 ```bash
 kubectl create namespace wesley-rouw
 ```
-Most commands are easy to use in Kubernetes, switching between namespaces is quite difficult. Copy the command and you will be in your namespace. The command after that should confirm you are in the right namespace.
+Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. The command after that should confirm you are in the right namespace.
 
 ```bash
 kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
@@ -41,7 +44,7 @@ kubectl config view | grep namespace:
 
 &nbsp;
 ### Create a deployment
-Now that we are in the right namespace it is time that we will deploy our replicaset
+Now that we are in the right namespace we will deploy our replicaset
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_deployment1.yaml
@@ -95,7 +98,7 @@ kubern8sdemo-68fcf74b6-55vjr   1/1       Running   0          1m
 kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          1m
 kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          1m
 ```
-As you can see there are three pods created each running with an own name. What would happen if we would delete one pod? Change the name to one of your pods
+As you can see there are three pods created each running with an own name. What would happen if we would delete one pod? Use the command below and change the name of the pod to yours. 
 
 ```bash
 kubectl delete pod kubern8sdemo-68fcf74b6-55vjr
@@ -116,7 +119,7 @@ kubern8sdemo-68fcf74b6-s4j2h   1/1       Running   0          24s
 In my example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 24s ago while the other 2 were created 2m ago. 
 &nbsp;
 
-So how do we reduce the amounts of pods then? We will have to scale the deployment. We are now scaling down the deployment to 2 pods. This will be a permanent change, unless we late specify a different amount of pods. 
+So how do we reduce the amounts of pods then? We will have to scale the replicaset. We are going to scale down the deployment to 2 pods. This will be a permanent change, unless we late adjust the desired amount again.
 
 ```bash
 kubectl scale deployments kubern8sdemo --replicas=2  
@@ -144,7 +147,7 @@ The desired amount is now 2.
 &nbsp;
 
 ### Create a service
-We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Let's create a service now:
+We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create a service:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service1.yaml
@@ -166,7 +169,7 @@ spec:
     app: kubern8sdemo
   type: LoadBalancer
 ```
-Let's check the service.
+To check the status of the service, use the command below.
 
 ```bash
 kubectl get service
@@ -179,7 +182,7 @@ kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   
 Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
 &nbsp;
 
-We have connected the service to the pods with the labels and selectors. Let's check our browser. Open a new tab and copy the external IP. An webapplication should appear, hit the autorefresh button. We will need that later. 
+We have connected the service to the pods with the labels and selectors. When we will check our browser we will see the application. Open a new tab and copy the external IP. A webapplication should appear. Hit the autorefresh button. We will need that later. 
 
 &nbsp;
 
@@ -211,12 +214,12 @@ spec:
         - containerPort: 80
 ```
 
-As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. When you do so, don't forget to check your browser. 
+As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. When you do so, don't forget to check your browser. Before proceeding to the next steps, wait till the application has been updated in your browser.
 
 ```bash
 kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
 ```
-I think version 5 is a little bit too overwhelming, let's switch to an older version. Let's also check right after we update what happens to the pods. 
+I think version 5 is a little bit too overwhelming, we will switch to an older version. When we have done so, we will check out the status of the pods to see what happens under the hood when we do a rollout of an older or newer version to the pods.  
 
 ```bash
 kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v3
@@ -224,28 +227,28 @@ kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v3
 ```bash
 kubectl get pods -w
 ```
-the -w means that we are watching for changing. when you have executed that command you should see something similar like this:
+the -w means that we are watching for changes. when you have executed that command you should see something similar like this:
 ```bash
 NAME                           READY     STATUS              RESTARTS   AGE
 kubern8sdemo-7b4db456b-j59sd   1/1       Running             0          2m
 kubern8sdemo-7b4db456b-npk75   1/1       Running             0          2m
 kubern8sdemo-84ff7fd64-w4ksc   0/1       ContainerCreating   0          2s
-kubern8sdemo-84ff7fd64-w4ksc   1/1       Running   0         3s
-kubern8sdemo-7b4db456b-j59sd   1/1       Terminating   0         2m
-kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending   0         0s
-kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending   0         0s
-kubern8sdemo-84ff7fd64-m4rzh   0/1       ContainerCreating   0         0s
-kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
-kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
-kubern8sdemo-7b4db456b-j59sd   0/1       Terminating   0         2m
-kubern8sdemo-84ff7fd64-m4rzh   1/1       Running   0         4s
-kubern8sdemo-7b4db456b-npk75   1/1       Terminating   0         2m
-kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
-kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
-kubern8sdemo-7b4db456b-npk75   0/1       Terminating   0         2m
+kubern8sdemo-84ff7fd64-w4ksc   1/1       Running             0          3s
+kubern8sdemo-7b4db456b-j59sd   1/1       Terminating         0          2m
+kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending             0          0s
+kubern8sdemo-84ff7fd64-m4rzh   0/1       Pending             0          0s
+kubern8sdemo-84ff7fd64-m4rzh   0/1       ContainerCreating   0          0s
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating         0          2m
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating         0          2m
+kubern8sdemo-7b4db456b-j59sd   0/1       Terminating         0          2m
+kubern8sdemo-84ff7fd64-m4rzh   1/1       Running             0          4s
+kubern8sdemo-7b4db456b-npk75   1/1       Terminating         0          2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
+kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 ```
-Kubernetes is creating a new container and then terminates one and does this one more time since our desired amount is 2 containers. 
+Kubernetes is creating a new container and then terminates one and does this one more time since our desired amount is 2 containers. Use control/cmd c to stop it. 
 
 &nbsp;
 ### The End
-Well that's about it. You have learnt how to set up your own namespace. In this namespace you have set up a pod with 3 containers. Later we have scaled this amount down to 2. After that you have set up your own loadbalancer. Kubernetes automatically detected to which pod it needs to be connected. At last we have updated the version of the images the containers were running. Well done you did it! Don't hesitate to ask any questions.
+Well that's about it. You have learnt how to set up your own namespace. In this namespace you have set up a pod with 3 containers. Later we have scaled this amount down to 2. After that you have set up your own loadbalancer. Kubernetes automatically detected to which pod it needs to be connected. At last we have updated the version of the images the containers were running. In case you have questions, please feel free to ask.
