@@ -11,3 +11,4 @@ spec:
   selector:
     app: kubern8sdemo
   type: LoadBalancer
+  loadBalancerIP: CHANGE_ME
