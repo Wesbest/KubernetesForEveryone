@@ -3,6 +3,8 @@
 
 In this workshop we will create your own namespace, deployment and service. We will also destroy a pod, get more info on services and update our pods to a newer version.
 
+Before we start check the kubectl cheat sheet. We will use this utility during the workshop. https://files.acrobat.com/a/preview/5f7379e6-8331-4b90-ac64-691190c06ad3
+
 &nbsp;
 ###  Login to your environment
 Go to this link: https://cloud.google.com/shell/
