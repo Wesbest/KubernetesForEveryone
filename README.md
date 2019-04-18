@@ -157,7 +157,7 @@ wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Trai
 First we need to manipulate the service defintion by adding an external ip adress. Select ip that is available in the following link: 
 https://bit.ly/2GuBdRf
 
-Add the external ip adress by replacing the CHANGE_ME with the ip adresses that you have selected from the list.
+Add the external ip adress by replacing the CHANGE_ME with the ip adresses that you have selected from the list. First add this comment to a notepad and add the ip as described below. When you copy the command and paste it to the cloud shell it automatically hits enter before you have even edited the ip address. 
 
 ```bash
 sed -i 's/IP_ADDRESS/CHANGE_ME/g' kubernetes_service1.yaml
