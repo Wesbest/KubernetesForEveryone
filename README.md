@@ -9,7 +9,7 @@ Go to this link: https://cloud.google.com/shell/
 
 Launch the cloud shell. Use your Devoteam account to login. When the shell appear copy below, paste it there and hit enter.
 ```bash
-gcloud container clusters get-credentials kubeforeveryone --zone europe-west2-a --project dulcet-provider-225307
+gcloud beta container clusters get-credentials standard-cluster-1 --region europe-west4 --project docker-training-207312
 ```
 
 &nbsp;
@@ -161,7 +161,7 @@ Add the external ip adress by replacing the CHANGE_ME with the ip adresses that 
 
 ```bash
 sed -i 's/IP_ADDRESS/CHANGE_ME/g' kubernetes_service1.yaml
-EG:  
+eg:  
 sed -i 's/IP_ADDRESS/10.10.10.1/g' kubernetes_service1.yaml
 ```
 
