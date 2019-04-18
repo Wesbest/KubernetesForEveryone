@@ -36,12 +36,10 @@ It's now time to create your own namespace. Use the command below and change the
 ```bash
 kubectl create namespace wesley-rouw
 ```
-Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. The command after that should confirm you are in the right namespace.
+Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. 
 
 ```bash
 kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
-# Validate it
-kubectl config view | grep namespace:
 ```
 
 &nbsp;
