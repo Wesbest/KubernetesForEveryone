@@ -3,15 +3,14 @@
 
 In this workshop we will create your own namespace, deployment and service. We will also destroy a pod, get more info on services and update our pods to a newer version.
 
-Before we start, check the kubectl cheat sheet. We will use this utility during the workshop. https://files.acrobat.com/a/preview/5f7379e6-8331-4b90-ac64-691190c06ad3
-
 &nbsp;
 ###  Login to your environment
-Go to this link: https://cloud.google.com/shell/
+Go to the following link: https://console.cloud.google.com/home/dashboard?cloudshell=true
 
 Launch the cloud shell. Use your Devoteam account to login. When the shell appear copy below, paste it there and hit enter.
+
 ```bash
-gcloud beta container clusters get-credentials standard-cluster-1 --region europe-west4 --project docker-training-207312
+gcloud container clusters get-credentials kubeforeveryone --zone europe-west2-a --project dulcet-provider-225307
 ```
 
 &nbsp;
@@ -36,18 +35,26 @@ It's now time to create your own namespace. Use the command below and change the
 ```bash
 kubectl create namespace wesley-rouw
 ```
-Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. 
+
+If you have wrongly created a namespace you can remove by using the followimg command:
+```
+kubectl delete namepsace <namespacename>
+```
+
+Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. The command after that should confirm you are in the right namespace.
 
 ```bash
 kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
+# Validate it
+kubectl config view | grep namespace:
 ```
-
+ 
 &nbsp;
 ### Create a deployment
 Now that we are in the right namespace we will deploy our replicaset
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_deployment1.yaml
+kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_deployment.yaml
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
@@ -79,6 +86,12 @@ To make sure if the deployment went correctly we are going to check the status
 ```bash
 kubectl get deployments
 ```
+If you want to delete the deployment you can use the following command: 
+
+```bash
+kubectl delete deployment <deployment_name>
+```
+
 You should see something similar like this. These are the amounts of pods you have created during this deployment. As you can see you have a desired amount of 3 pods and the current amount of pods are 3
 
 ```bash
@@ -151,24 +164,29 @@ We have our application ready, let's expose it to the outside world. For that we
 
 Download the service:
 ```bash
-wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service1.yaml
+wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service.yaml
 ```
 
-First we need to manipulate the service defintion by adding an external ip adress. Select ip that is available in the following link: 
-https://bit.ly/2GuBdRf
+First we need to manipulate the service defintion by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk.
 
-Add the external ip adress by replacing the CHANGE_ME with the ip adresses that you have selected from the list. First add this comment to a notepad and add the ip as described below. When you copy the command and paste it to the cloud shell it automatically hits enter before you have even edited the ip address. 
+Add the external ip adress by replacing the IP_ADDRESS value by using 'sed' with the ip adresses that you have selected from the list.
 
 ```bash
-sed -i 's/IP_ADDRESS/CHANGE_ME/g' kubernetes_service1.yaml
-eg:  
-sed -i 's/IP_ADDRESS/10.10.10.1/g' kubernetes_service1.yaml
+sed -i 's/IP_ADDRESS/10.10.10.1/g' kubernetes_service.yaml
 ```
+
+Verify if the IP_ADDRESS value has been properly replaced with the in the 'loadBalancerIP' section.
+
+```bash
+cat kubernetes_service.yaml
+```
+Something simimilair as the following should be your output
+
 
 Let's apply the service:
 
 ```bash
-kubectl create -f kubernetes_service1.yaml
+kubectl create -f kubernetes_service.yaml
 ```
 
 To get a clear view of what we have created I have included the yaml file of the service. 
@@ -267,6 +285,26 @@ kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 ```
 Kubernetes is creating a new container and then terminates one and does this one more time since our desired amount is 2 containers. Use control/cmd c to stop it. 
+
+
+
+
+
+
+```do it yourself```
+
+Try to get Mario running in your browser
+
+*tips
+Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
+Don't reinvent the wheel. Use our templates. (Link)
+Use Nano as an editor in Cloudshell.. for the CommandF00  masters among us use vim!
+
+Requirements: 
+Create a deployment with 2 pods.
+Create a services with type LoadBalancer and re-use your public ip adress. 
+
+
 
 &nbsp;
 ### The End
