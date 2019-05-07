@@ -1,6 +1,6 @@
  Kubernetes For Everyone
 -----------------------
-In this workshop you will set up your own cluster with several pods that will contain several pods that run an application. 
+In this workshop you will set up your own cluster. It will contain several pods that will run an application. 
 
 &nbsp;
 ###  Login to your environment
