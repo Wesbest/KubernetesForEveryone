@@ -11,6 +11,7 @@ Launch the cloud shell. Use the account to login. When the shell appear copy bel
 ```bash
 gcloud container clusters get-credentials kubeforeveryone --zone europe-west2-a --project dulcet-provider-225307
 ```
+![Cloud Shell](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/CloudShell.png)
 
 &nbsp;
 ### Create a namespace
