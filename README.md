@@ -1,13 +1,12 @@
  Kubernetes For Everyone
 -----------------------
-
-In this workshop we will create your own namespace, deployment and service. We will also destroy a pod, get more info on services and update our pods to a newer version.
+In this workshop you will set up your own cluster with several pods that will contain several pods that run an application. 
 
 &nbsp;
 ###  Login to your environment
 Go to the following link: https://console.cloud.google.com/home/dashboard?cloudshell=true
 
-Launch the cloud shell. Use your Devoteam account to login. When the shell appear copy below, paste it there and hit enter.
+Launch the cloud shell. Use the account to login. When the shell appear copy below, paste it there and hit enter.
 
 ```bash
 gcloud container clusters get-credentials kubeforeveryone --zone europe-west2-a --project dulcet-provider-225307
@@ -36,12 +35,7 @@ It's now time to create your own namespace. Use the command below and change the
 kubectl create namespace wesley-rouw
 ```
 
-If you have wrongly created a namespace you can remove by using the followimg command:
-```
-kubectl delete namepsace <namespacename>
-```
-
-Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Every work you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespace. The command after that should confirm you are in the right namespace.
+Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Everything that you will do, will now be done in this namespace. Work that will be done by others will be done in their own namespaces. The command after that should confirm you are in the right namespace.
 
 ```bash
 kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
@@ -51,10 +45,10 @@ kubectl config view | grep namespace:
  
 &nbsp;
 ### Create a deployment
-Now that we are in the right namespace we will deploy our replicaset
+Now that we are in the right namespace we will deploy our replicaset. A replicaset is a manifest that tells you how many pods should be there.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_deployment.yaml
 ````
 We have just deployed the following. It's a deployment with 3 pods. 
 ```bash
@@ -81,7 +75,7 @@ spec:
         - containerPort: 80
 ```
 
-To make sure if the deployment went correctly we are going to check the status
+To make sure if the deployment went correctly we are going to check the status:
 
 ```bash
 kubectl get deployments
@@ -164,7 +158,7 @@ We have our application ready, let's expose it to the outside world. For that we
 
 Download the service:
 ```bash
-wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/kubernetes_service.yaml
+wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
 ```
 
 First we need to manipulate the service defintion by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk.
@@ -178,18 +172,9 @@ sed -i 's/IP_ADDRESS/10.10.10.1/g' kubernetes_service.yaml
 Verify if the IP_ADDRESS value has been properly replaced with the in the 'loadBalancerIP' section.
 
 ```bash
-cat kubernetes_service.yaml
+cat k8s_service.yaml
 ```
-Something simimilair as the following should be your output
-
-
-Let's apply the service:
-
-```bash
-kubectl create -f kubernetes_service.yaml
-```
-
-To get a clear view of what we have created I have included the yaml file of the service. 
+Something simimilar should be your output
 
 ```bash
 apiVersion: v1
@@ -205,7 +190,14 @@ spec:
   selector:
     app: kubern8sdemo
   type: LoadBalancer
+  loadBalancerIP: 10.10.10.1
 ```
+Let's apply the service:
+
+```bash
+kubectl create -f k8s_service.yaml
+```
+
 To check the status of the service, use the command below.
 
 ```bash
@@ -292,6 +284,8 @@ Kubernetes is creating a new container and then terminates one and does this one
 
 
 ```do it yourself```
+
+![Super Mario](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/SuperMario.png)
 
 Try to get Mario running in your browser
 
