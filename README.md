@@ -283,8 +283,8 @@ Kubernetes is creating a new container and then terminates one and does this one
 
 
 
-
-```do it yourself```
+&nbsp;
+### Do It Yourself
 
 ![Super Mario](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/SuperMario.png)
 
@@ -303,4 +303,4 @@ Create a services with type LoadBalancer and re-use your public ip adress.
 
 &nbsp;
 ### The End
-Well that's about it. You have learnt how to set up your own namespace. In this namespace you have set up a pod with 3 containers. Later we have scaled this amount down to 2. After that you have set up your own loadbalancer. Kubernetes automatically detected to which pod it needs to be connected. At last we have updated the version of the images the containers were running. In case you have questions, please feel free to ask.
+Well that's about it. Raise your hand if you have questions!
