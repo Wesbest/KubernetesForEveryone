@@ -167,7 +167,7 @@ First we need to manipulate the service defintion by adding an external ip adres
 Add the external ip adress by replacing the IP_ADDRESS value by using 'sed' with the ip adresses that you have selected from the list.
 
 ```bash
-sed -i 's/IP_ADDRESS/10.10.10.1/g' kubernetes_service.yaml
+sed -i 's/IP_ADDRESS/10.10.10.1/g' k8s_service.yaml
 ```
 
 Verify if the IP_ADDRESS value has been properly replaced with the in the 'loadBalancerIP' section.
