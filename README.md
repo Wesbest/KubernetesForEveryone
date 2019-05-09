@@ -338,4 +338,4 @@ Expose the application on port 8080
 
 &nbsp;
 ### The End
-Well that's about it. Rais your hands if you have questions!
+Well that's about it. Raise your hand if you have questions!
