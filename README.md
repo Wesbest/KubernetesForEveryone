@@ -323,14 +323,19 @@ Try to get Super Mario running in your browser.
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
 Don't reinvent the wheel. Use our templates. https://github.com/Wesbest/KubernetesForEveryone/tree/master/Templates
 Use Nano as an editor in Cloudshell. For the CommandF00  masters among us use vim!
+&nbsp;
 
-Requirements: 
-Create a deployment with 2 pods.
-Create a services with type LoadBalancer and re-use your public ip adress. 
+
+Requirements: &nbsp;
+
+Create a deployment with 2 pods. &nbsp;
+
+Create a services with type LoadBalancer and re-use your public ip adress. &nbsp;
+
 Expose the application on port 8080
 
 
 
 &nbsp;
 ### The End
-Well that's about it. Raise your hands if you have questions!
+Well that's about it. Rais your hands if you have questions!
