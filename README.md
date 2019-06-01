@@ -29,7 +29,7 @@ In case you get into the console and not into the shell. Please click on the lef
 
 &nbsp;
 ### Create a namespace
-Now that we are into the cluster we need to create a namespace, but first let's see what namespaces are there already.
+Now that we are into the cluster we need to create a namespace, but first let's see what namespaces are available.
 
 ```bash
 kubectl get namespace
@@ -41,26 +41,27 @@ kube-system   Active    1d
 kube-public   Active    1d
 ```
 
-You probably see something similiar above. Those are the default namespaces that are always there. If you will not specify a namespace, all your deployments and changes will be done in the default namespace. 
+You probably see something similar above. Those are the default namespaces that are always there. By default if you don't specify a namespace, all your deployments and changes will be done in the default namespace. 
 &nbsp;
 
-Create your own namespace. Use the command below and change the name in the example to your own name.
+Now lets create your own namespace. Use the command below and change the name in the example to your own name.
 
 ```bash
-kubectl create namespace wesley-rouw
+kubectl create namespace max-vd-meij
 ```
 
-Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy the command and you will be in your namespace. Everything that you will create, will now be done in this namespace. Work that will be done by others will be done in their own namespaces. The command after that should confirm you are in the right namespace.
+Most commands are easy to use in Kubernetes, switching between namespaces is a different story. Copy and execute the command below to switch to your own namespace. Don't forget to switch the namespace name to your own.
+The following kubectl commands will now only executed within this namespace. Deployments in other namespaces will not be visible. Validate the namespace change with the second command.
 
 ```bash
-kubectl config set-context $(kubectl config current-context) --namespace=wesley-rouw
+kubectl config set-context $(kubectl config current-context) --namespace=max-vd-meij
 # Validate it
 kubectl config view | grep namespace:
 ```
  
 &nbsp;
 ### Create a deployment
-Now that we are in the right namespace we will deploy our replicaset. A replicaset is a part of the manifest that tells you how many pods should be there.
+Now that we are in the right namespace we will deploy our replicaset. A replicaset is part of the manifest that tells kubernetes how many copies of your pods should always be available.
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_deployment.yaml
@@ -90,7 +91,7 @@ spec:
         - containerPort: 80
 ```
 
-To make sure if the deployment went correctly we are going to check the status:
+To make sure the deployment went correctly we are going to check the status:
 
 ```bash
 kubectl get deployments
@@ -101,7 +102,7 @@ If you want to delete the deployment you can use the following command:
 kubectl delete deployment <deployment_name>
 ```
 
-You should see something similar like this. These are the amounts of pods you have created during this deployment. As you can see you have a desired amount of 3 pods and the current amount of pods are 3
+If you didn't delete the deployment the status should look something similar to this. These are the amounts of pods you have created during this deployment. As you can see you have a desired amount of 3 pods and the current amount of pods are 3. 
 
 ```bash
 NAME           DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
@@ -126,7 +127,7 @@ As you can see there are three pods created each running with their own name. Wh
 kubectl delete pod kubern8sdemo-68fcf74b6-55vjr
 ```
 
-Okay we have now deleted the pod. Let's take a look at the status of the pods
+Okay we have now deleted the pod. Let's take a look at the status of the pods.
 
 ```bash
 kubectl get pods
@@ -138,15 +139,15 @@ kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          2m
 kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          2m
 kubern8sdemo-68fcf74b6-s4j2h   1/1       Running   0          24s
 ```
-In this example you can see there are still three pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes have automatically created a new pod. Above you can see a new pod has been created 24s ago while the other 2 were created 2m ago. 
+In this example you can see there are still 3 pods running, how is that possible? We have deleted a pod, but we have stated that the desired amount of the pods should be 3. Kubernetes has automatically created a new pod. Above you can see a new pod has been created 24s ago while the other 2 were created 2m ago. The kubernetes master node will make sure to keep as many available as is desired.
 &nbsp;
 
-So how do we reduce the amounts of pods then? We will have to scale the replicaset. We are going to scale down the deployment to 2 pods. This will be a permanent change, unless we later adjust the desired amount of pods again.
+So how do we reduce the amounts of pods? We will have to scale the replicaset. We are going to scale down the deployment to 2 pods. This will be a permanent change, unless we later adjust the desired amount of pods again.
 
 ```bash
 kubectl scale deployments kubern8sdemo --replicas=2  
 ```
-Now let's check the amount of pods 
+Now let's check the amount of pods again
 
 ```bash
 kubectl get pods
@@ -156,7 +157,7 @@ NAME                           READY     STATUS    RESTARTS   AGE
 kubern8sdemo-68fcf74b6-h8ncl   1/1       Running   0          7m
 kubern8sdemo-68fcf74b6-qddsp   1/1       Running   0          7m
 ```
-As you can see the amount of pods has been reduced. Let's check the deployment to see the desired amount of pods
+As you can see the amount of pods has been reduced. Let's check the deployment to see the desired amount of pods.
 ```bash
 kubectl get deployments
 ```
@@ -169,14 +170,14 @@ The desired amount is now 2.
 &nbsp;
 
 ### Create a service
-We have our application ready, let's expose it to the outside world. For that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create the service:
+We have our application ready, let's expose it to the outside world. In order to do that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create the service:
 
 Download the service:
 ```bash
 wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
 ```
 
-First we need to manipulate the service defintion by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk.
+First we need to manipulate the service definition by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk. 
 
 Add the external ip adress by replacing the IP_ADDRESS value by using 'sed' with the ip adresses that you have selected from the list.
 
@@ -184,12 +185,12 @@ Add the external ip adress by replacing the IP_ADDRESS value by using 'sed' with
 sed -i 's/IP_ADDRESS/10.10.10.1/g' k8s_service.yaml
 ```
 
-Verify if the IP_ADDRESS value has been replaced properly with the'loadBalancerIP' section.
+Verify the IP_ADDRESS value has been replaced properly with the'loadBalancerIP' section.
 
 ```bash
 cat k8s_service.yaml
 ```
-Something simimilar should be your output
+The final service description should look something to this:
 
 ```bash
 apiVersion: v1
@@ -223,10 +224,10 @@ kubectl get service
 NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
 kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   47s
 ```
-Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon.
+Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon. 
 &nbsp;
 
-We have connected the service to the pods with the labels and selectors. When we will check our browser we will see the application. Open a new tab and copy the external IP. A webapplication should appear. Hit the autorefresh button. We will need that later. 
+We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service loadbalancer. Open a new tab and copy the external IP. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
@@ -235,7 +236,7 @@ We have connected the service to the pods with the labels and selectors. When we
 
 ### Update Pods
 
-Don't you think our application is outdated? I've heard the image got some updates, let's check it out. Remember the deployment?
+Our developers have worked hard to create a new version of our application. Let's update the deployment! Remember the deployment?
 
 ```bash
 apiVersion: apps/v1
@@ -261,7 +262,7 @@ spec:
         - containerPort: 80
 ```
 
-As you can see it has version 1. Currently they are already on version 5. With a single command we can update the the pods. When you do so, don't forget to check your browser. Before proceeding to the next steps, wait till the application has been updated in your browser.
+As you can see our old deployment uses docker image with tag v1. The developers are already finished with version 5. With a single command we can update the version of our deployed pods. If you want to see how quick the application is updated, make sure to keep an eye on your browser. Before proceeding to the next step, wait till the application has been updated in your browser.
 
 ```bash
 kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
@@ -270,15 +271,16 @@ kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
 
 &nbsp;
 
-I think version 5 is a little bit too overwhelming, we will switch to an older version. When we have done so, we will check out the status of the pods to see what happens under the hood when we do a rollout of an older or newer version to the pods.  
+It seems that version 5 was a bit too much, lets roll back a few version and see what kubernetes does under the hood. If you want to watch live changes to the pods include -w as shown below. Keep an eye on the terminal while executing the version change.
 
-```bash
-kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v3
-```
 ```bash
 kubectl get pods -w
 ```
-the -w means that we are watching for changes. when you have executed that command you should see something similar like this:
+```bash
+kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v3
+```
+
+While watching the live changes, you should see something similar to this:
 ```bash
 NAME                           READY     STATUS              RESTARTS   AGE
 kubern8sdemo-7b4db456b-j59sd   1/1       Running             0          2m
@@ -298,10 +300,10 @@ kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 kubern8sdemo-7b4db456b-npk75   0/1       Terminating         0          2m
 ```
-Kubernetes is creating a new container and then terminates one and does this one more time since our desired amount is 2 containers. Use control/cmd c to stop it. 
+Kubernetes is creating a new container before terminating the old one until our desired amount is reached. Use control/cmd c to stop it the pod watch.
 &nbsp;
 
-Below you see a picture of how your browser should look like:
+Below you can see how your application should now look in the browser:
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_3_stars.png)
 
@@ -322,7 +324,7 @@ Try to get Super Mario running in your browser.
 
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
 Don't reinvent the wheel. Use our templates. https://github.com/Wesbest/KubernetesForEveryone/tree/master/Templates
-Use Nano as an editor in Cloudshell. For the CommandF00  masters among us use vim!
+Use Nano as text editor in Cloudshell. The real masters may also use vim ofcourse!
 &nbsp;
 
 
