@@ -180,12 +180,14 @@ wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Trai
 
 First, we need to manipulate the service definition by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk. 
 
-Add the external ip adress by replacing the IP_ADDRESS value by using 'sed' with the ip adresses that you have selected from the list.
+Add the external ip adress to your service using the command below by replacing 10.10.10.1 with the ip adresses that you have received. Or use any other editor such as vim to manually replace the ip adress.
 
 ```bash
 sed -i 's/IP_ADDRESS/10.10.10.1/g' k8s_service.yaml
 ```
-
+```bash
+vim k8s_service.yaml
+```
 Verify the IP_ADDRESS value has been replaced properly with the'loadBalancerIP' section.
 
 ```bash
@@ -263,7 +265,7 @@ spec:
         - containerPort: 80
 ```
 
-As you can see our old deployment uses docker image with tag v1. The developers are already finished with version 5. With a single command we can update the version of our deployed pods. If you want to see how quick the application is updated, make sure to keep an eye on your browser. Before proceeding to the next step, wait till the application has been updated in your browser.
+As you can see our old deployment uses a docker image with tag v1. The developers recently finished version 5. With a single command we can update the version of our deployed pods to that version. If you want to see how quick the application is updated, make sure to keep an eye on your browser. Before proceeding to the next step, wait till the application has been updated in your browser.
 
 ```bash
 kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
@@ -272,7 +274,7 @@ kubectl set image deployment/kubern8sdemo kubern8sdemo=mvdmeij/k8sdemo:v5
 
 &nbsp;
 
-It seems that version 5 was a bit too much. Lets roll back a few versions and see what kubernetes does under the hood. If you want to watch live changes to the pods include -w as shown below. Keep an eye on the terminal while executing the deployment version change.
+It seems that version 5 was a bit too much for our users. Lets roll back a few versions and see what kubernetes does under the hood. If you want to watch live changes to the pods include -w as shown below. Keep an eye on the terminal while executing the version change.
 
 ```bash
 kubectl get pods -w
