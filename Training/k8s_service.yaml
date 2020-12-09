@@ -11,4 +11,3 @@ spec:
   selector:
     app: kubern8sdemo
   type: LoadBalancer
-  loadBalancerIP: IP_ADDRESS
