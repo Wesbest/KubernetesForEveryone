@@ -159,7 +159,7 @@ Download the service:
 Let's apply the service:
 
 ```bash
-kubectl create -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
+kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_service.yaml
 
 ```
 
