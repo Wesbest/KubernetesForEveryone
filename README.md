@@ -7,26 +7,6 @@ In this workshop you will create your own deployment. It contains several pods t
 
 &nbsp;
 
-In this workshop we make use of the Google Cloud Shell. This shell provides all the tools that are necessary to manage Kubernetes. In the shell we will use the utility kubectl. On the cheat sheet you can find the useful commands that you can use during the workshop. 
-
-&nbsp;
-###  Login to your environment
-Open an incognito browser, paste the following link and sign in with the accountdetails that you can find on your chair. https://console.cloud.google.com/home/dashboard?cloudshell=true
-
-
-```bash
-gcloud beta container clusters get-credentials k8s4you --region europe-west4 --project directed-truck-196609
-```
-![Cloud Shell](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/CloudShell.png)
-
-&nbsp;
-
-In case you get into the console and not into the shell. Please click on the left icon from the range below. 
-
-![Cloud Shell](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/CloudShell2.png)
-
-
-
 &nbsp;
 ### Create a namespace
 Now that we are into the cluster we need to create a namespace, but first let's see what namespaces are available.
@@ -175,46 +155,12 @@ We have our application ready, let's expose it to the outside world. In order to
 
 Download the service:
 ```bash
-wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
-```
-
-First, we need to manipulate the service definition by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk. 
-
-Add the external ip adress to your service using the command below by replacing 10.10.10.1 with the ip adresses that you have received. Or use any other editor such as vim to manually replace the ip adress.
-
-```bash
-sed -i 's/IP_ADDRESS/10.10.10.1/g' k8s_service.yaml
-```
-```bash
-vim k8s_service.yaml
-```
-Verify the IP_ADDRESS value has been replaced properly with the'loadBalancerIP' section.
-
-```bash
-cat k8s_service.yaml
-```
-The final service description should look something to this:
-
-```bash
-apiVersion: v1
-kind: Service
-metadata:
-  name: kubern8sservice
-  labels:
-    app: kubern8sdemo
-spec:
-  ports:  
-  - port: 80
-    targetPort: 80
-  selector:
-    app: kubern8sdemo
-  type: LoadBalancer
-  loadBalancerIP: 10.10.10.1
 ```
 Let's apply the service:
 
 ```bash
-kubectl create -f k8s_service.yaml
+kubectl create -f https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
+
 ```
 
 To check the status of the service, use the command below.
