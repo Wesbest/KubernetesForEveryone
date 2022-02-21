@@ -1,7 +1,12 @@
  Kubernetes For Everyone
 -----------------------
+
+If you haven't installed Minikube then check out the following  [link](https://github.com/smii/KubernetesForEveryone/blob/master/minikube.md)
+
 In this workshop you will create your own deployment. It contains several pods that will run an application. The application will look like this:
 &nbsp;
+
+
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
 
