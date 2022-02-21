@@ -10,5 +10,4 @@ spec:
     targetPort: < Specify the container port>
   selector:
     app: 
-  type: 
-  loadBalancerIP: 
+  type: LoadBalancer

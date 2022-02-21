@@ -7,26 +7,6 @@ In this workshop you will create your own deployment. It contains several pods t
 
 &nbsp;
 
-In this workshop we make use of the Google Cloud Shell. This shell provides all the tools that are necessary to manage Kubernetes. In the shell we will use the utility kubectl. On the cheat sheet you can find the useful commands that you can use during the workshop. 
-
-&nbsp;
-###  Login to your environment
-Open an incognito browser, paste the following link and sign in with the accountdetails that you can find on your chair. https://console.cloud.google.com/home/dashboard?cloudshell=true
-
-
-```bash
-gcloud beta container clusters get-credentials k8s4you --region europe-west4 --project directed-truck-196609
-```
-![Cloud Shell](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/CloudShell.png)
-
-&nbsp;
-
-In case you get into the console and not into the shell. Please click on the left icon from the range below. 
-
-![Cloud Shell](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/CloudShell2.png)
-
-
-
 &nbsp;
 ### Create a namespace
 Now that we are into the cluster we need to create a namespace, but first let's see what namespaces are available.
@@ -175,46 +155,12 @@ We have our application ready, let's expose it to the outside world. In order to
 
 Download the service:
 ```bash
-wget https://raw.githubusercontent.com/Wesbest/KubernetesForEveryone/master/Training/k8s_service.yaml
-```
-
-First, we need to manipulate the service definition by adding an external ip adress. You can find the ip adress that is assigned to you on your sheet on your desk. 
-
-Add the external ip adress to your service using the command below by replacing 10.10.10.1 with the ip adresses that you have received. Or use any other editor such as vim to manually replace the ip adress.
-
-```bash
-sed -i 's/IP_ADDRESS/10.10.10.1/g' k8s_service.yaml
-```
-```bash
-vim k8s_service.yaml
-```
-Verify the IP_ADDRESS value has been replaced properly with the'loadBalancerIP' section.
-
-```bash
-cat k8s_service.yaml
-```
-The final service description should look something to this:
-
-```bash
-apiVersion: v1
-kind: Service
-metadata:
-  name: kubern8sservice
-  labels:
-    app: kubern8sdemo
-spec:
-  ports:  
-  - port: 80
-    targetPort: 80
-  selector:
-    app: kubern8sdemo
-  type: LoadBalancer
-  loadBalancerIP: 10.10.10.1
 ```
 Let's apply the service:
 
 ```bash
-kubectl create -f k8s_service.yaml
+kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_service.yaml
+
 ```
 
 To check the status of the service, use the command below.
@@ -224,13 +170,28 @@ kubectl get service
 ```
 
 ```bash
-NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
-kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   47s
+NAME              TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubern8sservice   NodePort   10.108.57.90   <none>        80:32227/TCP   18m
 ```
-Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon. 
-&nbsp;
+Something similar should appear. The service has created and can be reachable within the kubernetes space by using the 'kubern8sservice' as name but it's not reachable from the outside world! 
 
-We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service loadbalancer. Open a new tab and copy the external IP. A webapplication should appear. Enable the autorefresh button. We will need that later. 
+
+Let's add a hostname to the service to make it reachable from the outside world!
+```bash
+kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_ingress.yaml
+```
+
+Now let's check which hostname it created for our service!
+
+```bash
+kubectl get ingress
+```
+```bash
+NAME              CLASS    HOSTS              ADDRESS         PORTS   AGE
+example-ingress   <none>   hello-world.test   172.31.232.29   80      8m54s
+```
+
+We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
@@ -326,7 +287,7 @@ Try to get Super Mario running in your browser.
 *tips
 
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
-Don't reinvent the wheel. Use our templates. https://github.com/Wesbest/KubernetesForEveryone/tree/master/Templates
+Don't reinvent the wheel. Use our templates. https://github.com/smii/KubernetesForEveryone/tree/master/Templates
 Use Nano as text editor in Cloudshell. The real masters may also use vim ofcourse!
 &nbsp;
 
@@ -335,10 +296,9 @@ Requirements: &nbsp;
 
 Create a deployment with 2 pods. &nbsp;
 
-Create a services with type LoadBalancer and re-use your public ip adress. &nbsp;
+Create a services with type NodePort and re-use your public ip adress. &nbsp;
 
-Expose the application on port 8080
-
+Create an ingress that points to the label previous created service
 
 
 &nbsp;
