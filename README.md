@@ -34,7 +34,7 @@ Most commands are easy to use in Kubernetes, switching between namespaces is a d
 The actions which follow will now only execute within this namespace. Deployments in other namespaces will not be visible. Now lets validate the namespace change with the second command.
 
 ```bash
-kubectl config set-context $(kubectl config current-context) --namespace=insert-name
+kubectl config set-context $(kubectl config current-context) --namespace=<insert-namespace-name>
 # Validate it
 kubectl config view | grep namespace:
 ```
@@ -151,7 +151,7 @@ The desired amount is now 2.
 &nbsp;
 
 ### Create a service
-We have our application ready, let's expose it to the outside world. In order to do that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create the service:
+We have our application ready, let's make a start to expose it to the outside world. In order to do that we need to create a service. This service will be used to link to the deployment with the use of the selectors and labels. Create the service:
 
 Download the service:
 ```bash
@@ -191,7 +191,7 @@ NAME              CLASS    HOSTS              ADDRESS         PORTS   AGE
 example-ingress   <none>   hello-world.test   172.31.232.29   80      8m54s
 ```
 
-We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
+We have now connected the ingress to service which is connected to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
