@@ -153,9 +153,6 @@ The desired amount is now 2.
 ### Create a service
 We have our application ready, let's make a start to expose it to the outside world. In order to do that we need to create a service. This service will be used to link to the deployment with the use of the selectors and labels. Create the service:
 
-Download the service:
-```bash
-```
 Let's apply the service:
 
 ```bash
