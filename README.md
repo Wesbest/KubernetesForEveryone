@@ -292,7 +292,7 @@ Try to get Super Mario running in your browser.
 
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
 Don't reinvent the wheel. Use our templates. https://github.com/smii/KubernetesForEveryone/tree/master/Templates
-Use Nano as text editor in Cloudshell. The real masters may also use vim ofcourse!
+Use your favorite editor but the real masters may also use vim ofcourse!
 &nbsp;
 
 
