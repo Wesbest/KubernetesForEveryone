@@ -15,6 +15,22 @@ New-Item -Path 'c:\' -Name 'minikube' -ItemType Directory -Force
 Invoke-WebRequest -OutFile 'c:\minikube\minikube.exe' -Uri 'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe' -UseBasicParsing
 ```
 
+## Add minikube to your path 
+#### After adding Minikube to your path ensure you restart powershell!
+```powershell 
+$oldPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine)
+if ($oldPath.Split(';') -inotcontains 'C:\minikube'){ `
+  [Environment]::SetEnvironmentVariable('Path', $('{0};C:\minikube' -f $oldPath), [EnvironmentVariableTarget]::Machine) `
+}
+```
+
+
+## Install kubectl 
+```powershell
+Invoke-WebRequest -OutFile 'c:\minikube\kubectl' -Uri 'https://dl.k8s.io/release/v1.23.0/bin/windows/amd64/kubectl.exe' -UseBasicParsing
+```
+If the download process is to slow then copy the weblink and download through the browser and save kubectl.exe in c:\minikube
+
 ## Start Minikube 
 ```powershell 
 minikube start
@@ -26,6 +42,7 @@ minikube addons enable ingress-dns
 ```
 
 ## Add Minikube DNS to your system 
+#### It is important to know that you will need the DNS entry again each time you reboot your system
 ```powershell
 Add-DnsClientNrptRule -Namespace ".test" -NameServers "$(minikube ip)"
 ```

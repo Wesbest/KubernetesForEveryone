@@ -170,13 +170,28 @@ kubectl get service
 ```
 
 ```bash
-NAME              TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
-kubern8sservice   LoadBalancer   10.51.240.199   35.242.185.86   80:32015/TCP   47s
+NAME              TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubern8sservice   NodePort   10.108.57.90   <none>        80:32227/TCP   18m
 ```
-Something similar should appear. The loadbalancer is now created and has got an external ip. If it says pending, just wait a little longer it should appear soon. 
-&nbsp;
+Something similar should appear. The service has created and can be reachable within the kubernetes space by using the 'kubern8sservice' as name but it's not reachable from the outside world! 
 
-We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service loadbalancer. Open a new tab and copy the external IP. A webapplication should appear. Enable the autorefresh button. We will need that later. 
+
+Let's add a hostname to the service to make it reachable from the outside world!
+```bash
+kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_ingress.yaml
+```
+
+Now let's check which hostname it created for our service!
+
+```bash
+kubectl get ingress
+```
+```bash
+NAME              CLASS    HOSTS              ADDRESS         PORTS   AGE
+example-ingress   <none>   hello-world.test   172.31.232.29   80      8m54s
+```
+
+We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
@@ -272,7 +287,7 @@ Try to get Super Mario running in your browser.
 *tips
 
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
-Don't reinvent the wheel. Use our templates. https://github.com/Wesbest/KubernetesForEveryone/tree/master/Templates
+Don't reinvent the wheel. Use our templates. https://github.com/smii/KubernetesForEveryone/tree/master/Templates
 Use Nano as text editor in Cloudshell. The real masters may also use vim ofcourse!
 &nbsp;
 
@@ -281,10 +296,9 @@ Requirements: &nbsp;
 
 Create a deployment with 2 pods. &nbsp;
 
-Create a services with type LoadBalancer and re-use your public ip adress. &nbsp;
+Create a services with type NodePort and re-use your public ip adress. &nbsp;
 
-Expose the application on port 8080
-
+Create an ingress that points to the label previous created service
 
 
 &nbsp;
