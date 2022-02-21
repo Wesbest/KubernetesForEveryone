@@ -174,7 +174,7 @@ kubern8sservice   NodePort   10.108.57.90   <none>        80:32227/TCP   18m
 ```
 Something similar should appear. The service has created and can be reachable within the kubernetes space by using the 'kubern8sservice' as name but it's not reachable from the outside world! 
 
-
+### Create an Ingress
 Let's add a hostname to the service by using an ingress controller (nginx) to make it reachable from the outside world!
 ```bash
 kubectl create -fhttps://raw.githubusercontent.com/smii/KubernetesForEveryone/dev/Training/k8s_ingress.yaml
