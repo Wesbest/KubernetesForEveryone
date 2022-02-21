@@ -173,9 +173,9 @@ kubern8sservice   NodePort   10.108.57.90   <none>        80:32227/TCP   18m
 Something similar should appear. The service has created and can be reachable within the kubernetes space by using the 'kubern8sservice' as name but it's not reachable from the outside world! 
 
 
-Let's add a hostname to the service to make it reachable from the outside world!
+Let's add a hostname to the service by using an ingress controller (nginx) to make it reachable from the outside world!
 ```bash
-kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_ingress.yaml
+kubectl create -fhttps://raw.githubusercontent.com/smii/KubernetesForEveryone/dev/Training/k8s_ingress.yaml
 ```
 
 Now let's check which hostname it created for our service!
@@ -188,7 +188,7 @@ NAME              CLASS    HOSTS              ADDRESS         PORTS   AGE
 example-ingress   <none>   hello-world.test   172.31.232.29   80      8m54s
 ```
 
-We have now connected the ingress to service which is connected to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
+We have now connected the ingress to our 'kubern8sservice' service which is connected to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
