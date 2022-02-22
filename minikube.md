@@ -3,7 +3,7 @@
 For our Linux friends you follow your distro [here](https://minikube.sigs.k8s.io/docs/start/)
 
 ## Install Hyper-V (If already using VirutalBox skip to section 'Start Minikube')
-Open powershell as administrator (run as) \
+Open powershell as administrator (run as) 
 ```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 ```
