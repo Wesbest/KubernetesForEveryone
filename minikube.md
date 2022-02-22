@@ -1,8 +1,9 @@
 
-# Install Minikube + DNS 
+# Install Minikube + DNS on Windows 10/11
+For our Linux friends you follow your distro [here](https://minikube.sigs.k8s.io/docs/start/)
 
-## Install Hyper-V
-Open powershell as administrator (run as) \
+## Install Hyper-V (If already using VirutalBox skip to section 'Start Minikube')
+Open powershell as administrator (run as) 
 ```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
 ```
@@ -27,14 +28,20 @@ if ($oldPath.Split(';') -inotcontains 'C:\minikube'){ `
 
 ## Install kubectl 
 ```powershell
-Invoke-WebRequest -OutFile 'c:\minikube\kubectl' -Uri 'https://dl.k8s.io/release/v1.23.0/bin/windows/amd64/kubectl.exe' -UseBasicParsing
+Invoke-WebRequest -OutFile 'c:\minikube\kubectl.exe' -Uri 'https://dl.k8s.io/release/v1.23.0/bin/windows/amd64/kubectl.exe' -UseBasicParsing
 ```
-If the download process is to slow then copy the weblink and download through the browser and save kubectl.exe in c:\minikube
+#### If the download process is to slow then copy the weblink and download through the browser and save kubectl.exe in c:\minikube
 
-## Start Minikube 
+## If you have installed Hyper-V then change the default driver to hyperv
 ```powershell 
-minikube start
+minikube set --driver=hyperv 
 ```
+
+## Start Minikube
+```powershell 
+minikube start 
+```
+
 ## Enable Minikube Ingress/DNS addons
 ```powershell
 minikube addons enable ingress

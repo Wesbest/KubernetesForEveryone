@@ -1,7 +1,12 @@
  Kubernetes For Everyone
 -----------------------
+
+If you haven't installed Minikube then check out the following  [link](https://github.com/smii/KubernetesForEveryone/blob/master/minikube.md)
+
 In this workshop you will create your own deployment. It contains several pods that will run an application. The application will look like this:
 &nbsp;
+
+
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
 
@@ -34,9 +39,11 @@ Most commands are easy to use in Kubernetes, switching between namespaces is a d
 The actions which follow will now only execute within this namespace. Deployments in other namespaces will not be visible. Now lets validate the namespace change with the second command.
 
 ```bash
-kubectl config set-context $(kubectl config current-context) --namespace=insert-name
-# Validate it
+kubectl config set-context $(kubectl config current-context) --namespace=<insert-namespace-name>
+# Validate it 
 kubectl config view | grep namespace:
+# When using powershell | 
+kubectl config view | select-string namespace:
 ```
  
 &nbsp;
@@ -151,11 +158,8 @@ The desired amount is now 2.
 &nbsp;
 
 ### Create a service
-We have our application ready, let's expose it to the outside world. In order to do that we need to create a loadbalancer. This loadbalancer will be linked to the deployment with the use of the selectors and labels. Create the service:
+We have our application ready, let's make a start to expose it to the outside world. In order to do that we need to create a service. This service will be used to link to the deployment with the use of the selectors and labels. Create the service:
 
-Download the service:
-```bash
-```
 Let's apply the service:
 
 ```bash
@@ -175,10 +179,10 @@ kubern8sservice   NodePort   10.108.57.90   <none>        80:32227/TCP   18m
 ```
 Something similar should appear. The service has created and can be reachable within the kubernetes space by using the 'kubern8sservice' as name but it's not reachable from the outside world! 
 
-
-Let's add a hostname to the service to make it reachable from the outside world!
+### Create an Ingress
+Let's add a hostname to the service by using an ingress controller (nginx) to make it reachable from the outside world!
 ```bash
-kubectl create -f https://raw.githubusercontent.com/smii/KubernetesForEveryone/master/Training/k8s_ingress.yaml
+kubectl create -fhttps://raw.githubusercontent.com/smii/KubernetesForEveryone/dev/Training/k8s_ingress.yaml
 ```
 
 Now let's check which hostname it created for our service!
@@ -191,7 +195,7 @@ NAME              CLASS    HOSTS              ADDRESS         PORTS   AGE
 example-ingress   <none>   hello-world.test   172.31.232.29   80      8m54s
 ```
 
-We have now connected the service to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
+We have now connected the ingress to our 'kubern8sservice' service which is connected to the pods with the help of labels and selectors. We can now access our application from the browser as it is exposed through the service ingress. Open a new tab and copy the hostname that returned in a browser. A webapplication should appear. Enable the autorefresh button. We will need that later. 
 &nbsp;
 
 ![Application](https://github.com/Wesbest/KubernetesForEveryone/blob/master/Pictures/App_1_star.png)
@@ -288,7 +292,7 @@ Try to get Super Mario running in your browser.
 
 Image source: https://hub.docker.com/r/pengbai/docker-supermario/ 
 Don't reinvent the wheel. Use our templates. https://github.com/smii/KubernetesForEveryone/tree/master/Templates
-Use Nano as text editor in Cloudshell. The real masters may also use vim ofcourse!
+Use your favorite editor but the real masters may also use vim ofcourse!
 &nbsp;
 
 
